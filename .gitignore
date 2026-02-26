@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variables de entorno (¡Súper importante para tus llaves VAPID!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+
+# Archivos de sistema / IDE
+.DS_Store
+.vscode/
+.idea/
+dist/
+build/
