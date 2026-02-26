@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 
 function App() {
-  const [mensaje, setMensaje] = useState("Listo para probar");
+  const [mensajeEstado, setMensajeEstado] = useState("Listo para enviar");
+  // Nuevos estados para el formulario
+  const [titulo, setTitulo] = useState("");
+  const [cuerpo, setCuerpo] = useState("");
 
   const urlBase64ToUint8Array = (base64String) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -14,51 +17,80 @@ function App() {
     return outputArray;
   };
 
-  const suscribirYProbar = async () => {
+  const enviarNotificacion = async (e) => {
+    e.preventDefault(); // Evita que la página se recargue
+    
+    if (!titulo || !cuerpo) {
+      alert("Por favor llena ambos campos");
+      return;
+    }
+
     try {
-      const serverUrl = 'http://localhost:3000'; // Tu backend
+      const serverUrl = 'https://tu-app-en-render.onrender.com'; // <--- TU URL DE RENDER
       
-      // 1. Obtener la Public Key dinámicamente
-      setMensaje("Obteniendo llave del servidor...");
+      setMensajeEstado("Obteniendo llave...");
       const responseKey = await fetch(`${serverUrl}/public-key`);
       const { publicKey } = await responseKey.json();
 
-      // 2. Registrar y esperar al Service Worker
       const register = await navigator.serviceWorker.register('/sw.js');
       await navigator.serviceWorker.ready;
 
-      // 3. Limpiar suscripción vieja si existe
-      const oldSub = await register.pushManager.getSubscription();
-      if (oldSub) await oldSub.unsubscribe();
-
-      // 4. Crear la nueva suscripción con la llave obtenida
       const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicKey)
       });
 
-      // 5. Enviar suscripción al backend para disparar la notificación
-      setMensaje("Enviando suscripción...");
+      setMensajeEstado("Enviando notificación personalizada...");
+
+      // ENVIAR SUSCRIPCIÓN + DATOS DEL FORMULARIO
       await fetch(`${serverUrl}/subscribe`, {
         method: 'POST',
-        body: JSON.stringify(subscription),
+        body: JSON.stringify({
+          subscription: subscription, // La suscripción del navegador
+          titulo: titulo,             // Título del formulario
+          mensaje: cuerpo             // Mensaje del formulario
+        }),
         headers: { 'Content-Type': 'application/json' }
       });
 
-      setMensaje("¡Notificación enviada!");
+      setMensajeEstado("¡Enviada!");
     } catch (error) {
       console.error(error);
-      setMensaje("Error: " + error.message);
+      setMensajeEstado("Error: " + error.message);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Web Push Dinámico</h1>
-      <p>{mensaje}</p>
-      <button onClick={suscribirYProbar} style={{ padding: '10px 20px' }}>
-        Obtener Llave y Notificar
-      </button>
+    <div style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'Arial' }}>
+      <h1>Panel de Notificaciones</h1>
+      
+      <form onSubmit={enviarNotificacion} style={{ display: 'inline-block', textAlign: 'left', gap: '10px' }}>
+        <div>
+          <label>Título:</label><br/>
+          <input 
+            type="text" 
+            value={titulo} 
+            onChange={(e) => setTitulo(e.target.value)} 
+            placeholder="Ej: Hola Mundo"
+            style={{ width: '300px', marginBottom: '10px' }}
+          />
+        </div>
+        <div>
+          <label>Mensaje:</label><br/>
+          <textarea 
+            value={cuerpo} 
+            onChange={(e) => setCuerpo(e.target.value)} 
+            placeholder="Ej: Esta es una prueba"
+            style={{ width: '300px', height: '80px', marginBottom: '10px' }}
+          />
+        </div>
+        <br/>
+        <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}>
+          Enviar Notificación ahora
+        </button>
+      </form>
+      
+      <p><strong>Estado:</strong> {mensajeEstado}</p>
     </div>
   );
 }

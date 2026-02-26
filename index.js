@@ -25,21 +25,20 @@ app.get('/public-key', (_, res) => {
 
 // 2. Ruta para recibir la suscripción y enviar la notificación de prueba
 app.post('/subscribe', async (req, res) => {
-    const subscription = req.body;
+    // Extraemos los datos que enviamos desde React
+    const { subscription, titulo, mensaje } = req.body;
 
-    // Payload: El contenido de la notificación
+    // Creamos el payload dinámico con lo que llegó de React
     const payload = JSON.stringify({
-        title: "¡Conexión Exitosa!",
-        message: "Tu servidor en Render (o local) te está saludando."
+        title: titulo || "girorides.com",
+        message: mensaje || "Tienes un nuevo mensaje."
     });
 
     try {
         await webpush.sendNotification(subscription, payload);
-        console.log("Notificación enviada con éxito.");
-        res.status(201).json({ message: "Notificación enviada." });
+        res.status(201).json({ message: "Notificación enviada con éxito." });
     } catch (error) {
-        console.error("Error enviando la notificación:", error);
-        // Si la suscripción expiró o es inválida, informamos al cliente
+        console.error("Error enviando:", error);
         res.status(error.statusCode || 500).json(error);
     }
 });
