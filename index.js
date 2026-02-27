@@ -48,11 +48,11 @@ app.post('/subscribe', (req, res) => {
 
 // 3. Enviar a TODOS los suscriptores (Broadcast)
 app.post('/send-all', async (req, res) => {
-    const { titulo, mensaje } = req.body;
+    const { title, message } = req.body;
 
     const payload = JSON.stringify({
-        title: titulo || "Aviso de Giro Rides",
-        message: mensaje || "Tienes una nueva actualización."
+        title: title || "Giro Rides",
+        message: message || "Tienes un mensaje."
     });
 
     console.log(`📣 Enviando notificación a ${subscriptions.length} dispositivos...`);
