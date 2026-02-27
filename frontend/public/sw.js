@@ -1,4 +1,13 @@
 // public/sw.js
+self.addEventListener('install', (event) => {
+  // Fuerza al Service Worker a activarse inmediatamente
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  // Permite que el SW tome el control de la página sin tener que recargar
+  event.waitUntil(clients.claim());
+});
 
 self.addEventListener("push", (event) => {
   const data = event.data.json();
@@ -8,7 +17,7 @@ self.addEventListener("push", (event) => {
     icon: "https://i.ibb.co/VkwP241/logogirorides.png", // Un icono cualquiera
     badge: "https://i.ibb.co/VkwP241/logogirorides.png",
     data: {
-      url: "https://girorides.com",
+      url: "https://www.girorides.com/drivers",
     },
   };
 
