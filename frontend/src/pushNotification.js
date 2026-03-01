@@ -1,20 +1,10 @@
+import { urlBase64ToUint8Array } from "./services.js";
+
 export default async function sendPushNotification(title, body) {
   const serverUrl = "https://push-notifications-server-6atv.onrender.com";
   const responseKey = await fetch(`${serverUrl}/public-key`);
   const { publicKey } = await responseKey.json();
 
-  const urlBase64ToUint8Array = (base64String) => {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  };
 
   const register = await navigator.serviceWorker.register("/sw.js");
   await navigator.serviceWorker.ready;
