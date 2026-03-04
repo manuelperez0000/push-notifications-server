@@ -10,6 +10,28 @@ export const subscriptionStore = {
         return data ? Object.values(data) : [];
     },
 
+     // Obtener todas las suscripciones de conductores de Firebase
+    getDrivers: async (vehicleType) => {
+        // Consultamos filtrando por la propiedad anidada user/isDriver
+        const snapshot = await subsRef
+            .orderByChild('user/isDriver')
+            .equalTo(true)
+            .once('value');
+            
+        // Filtramos por vehicleType si se proporciona
+        if (vehicleType) {
+            const data = snapshot.val();
+            // Convertimos el objeto de Firebase en un Array
+            const drivers = data ? Object.values(data) : [];
+            // Filtramos por vehicleType
+            return drivers.filter(driver => driver.user.vehicleType === vehicleType);
+        }
+            
+        const data = snapshot.val();
+        // Convertimos el objeto de Firebase en un Array
+        return data ? Object.values(data) : [];
+    },
+
     // Guardar una nueva (usamos el endpoint como ID único para evitar duplicados)
     add: async (sub) => {
         // Limpiamos el endpoint de caracteres no permitidos por Firebase como "." o "$"

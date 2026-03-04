@@ -8,5 +8,6 @@ router.get('/public-key', pushController.getPublicKey);
 router.get('/subscriptions', pushController.getSubscriptions);
 router.post('/subscribe', pushController.subscribe);
 router.post('/send-all', pushController.notifyAll);
+router.post('/send-drivers', pushController.notifyDrivers);
 
 export default router;
