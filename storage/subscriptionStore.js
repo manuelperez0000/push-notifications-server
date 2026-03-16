@@ -10,14 +10,14 @@ export const subscriptionStore = {
         return data ? Object.values(data) : [];
     },
 
-     // Obtener todas las suscripciones de conductores de Firebase
+    // Obtener todas las suscripciones de conductores de Firebase
     getDrivers: async (vehicleType) => {
         // Consultamos filtrando por la propiedad anidada user/isDriver
         const snapshot = await subsRef
             .orderByChild('user/isDriver')
             .equalTo(true)
             .once('value');
-            
+
         // Filtramos por vehicleType si se proporciona
         if (vehicleType) {
             const data = snapshot.val();
@@ -26,7 +26,7 @@ export const subscriptionStore = {
             // Filtramos por vehicleType
             return drivers.filter(driver => driver.user.vehicleType === vehicleType);
         }
-            
+
         const data = snapshot.val();
         // Convertimos el objeto de Firebase en un Array
         return data ? Object.values(data) : [];
@@ -50,12 +50,20 @@ export const subscriptionStore = {
         const snapshot = await subsRef.once('value');
         return snapshot.numChildren();
     },
-    
+
     // Obtener suscripciones por userId
     getByUserId: async (userId) => {
         const snapshot = await subsRef
             .orderByChild('user/id')
             .equalTo(userId)
+            .once('value');
+        const data = snapshot.val();
+        return data ? Object.values(data) : [];
+    },
+    getAdmins: async () => {
+        const snapshot = await subsRef
+            .orderByChild('users/role')
+            .equalTo("admin")
             .once('value');
         const data = snapshot.val();
         return data ? Object.values(data) : [];

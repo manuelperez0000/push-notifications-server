@@ -65,3 +65,23 @@ export const sendBroadcastUser = async (title, message, userId) => {
     await Promise.all(promises);
     return await subscriptionStore.getCount();
 }
+
+export const sendBroadcastAdmin = async (title, message) => {
+
+    const subs = await subscriptionStore.getAdmins(); // Esperamos a Firebase
+
+    const promises = subs.map(async (sub) => {
+        try {
+            const url = "https://girorides.com/admin"
+            await webpush.sendNotification(sub, payload(title, message, url));
+        } catch (err) {
+            if (err.statusCode === 410 || err.statusCode === 404) {
+                console.log("Suscripción expirada, eliminando de Firebase...");
+                await subscriptionStore.removeByEndpoint(sub.endpoint);
+            }
+        }
+    });
+
+    await Promise.all(promises);
+    return await subscriptionStore.getCount();
+}

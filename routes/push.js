@@ -11,5 +11,6 @@ router.post('/send-all', pushController.notifyAll);
 
 router.post('/send-drivers', pushController.notifyDrivers);
 router.post('/send-user', pushController.notifyUser);
+router.post('/send-admin', pushController.notifyAdmin);
 
 export default router;

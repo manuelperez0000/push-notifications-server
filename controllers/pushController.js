@@ -1,12 +1,12 @@
 import { subscriptionStore } from '../storage/subscriptionStore.js';
-import { sendBroadcast, sendBroadcastDrivers, sendBroadcastUser } from '../services/pushService.js';
+import { sendBroadcast, sendBroadcastDrivers, sendBroadcastUser, sendBroadcastAdmin } from '../services/pushService.js';
 
 export const getPublicKey = (req, res) => {
     res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
 };
 
 export const subscribe = async (req, res) => {
-    const { subscription,user } = req.body;
+    const { subscription, user } = req.body;
     if (!subscription?.endpoint) return res.status(400).send("Inválido");
 
     const _subscription = {
@@ -52,7 +52,17 @@ export const getSubscriptions = async (req, res) => {
 export const notifyUser = async (req, res) => {
     try {
         const { title, message, userId } = req.body;
-        const sentTo = await sendBroadcastUser(title, message,  userId);
+        const sentTo = await sendBroadcastUser(title, message, userId);
+        res.json({ success: true, sentTo });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const notifyAdmin = async (req, res) => {
+    try {
+        const { title, message } = req.body;
+        const sentTo = await sendBroadcastAdmin(title, message);
         res.json({ success: true, sentTo });
     } catch (error) {
         res.status(500).json({ error: error.message });
