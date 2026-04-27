@@ -1,8 +1,8 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { configureWebPush } from './config/webpush.js';
-import router from './router.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { configureWebPush } from "./config/webpush.js";
+import router from "./router.js";
 dotenv.config();
 
 const app = express();
@@ -11,14 +11,16 @@ configureWebPush();
 
 app.use(cors());
 app.use(express.json());
-app.get('/', (req, res) => {res.send("🚀 Giro Rides API");});
+app.get("/", (req, res) => {
+  res.json({ ok: true });
+});
 
-router(app)
+router(app);
 
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
-        console.log(`✅ Servidor corriendo en: http://localhost:${PORT}`);
-    });
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`✅ Servidor corriendo en: http://localhost:${PORT}`);
+  });
 }
 
 export default app;
