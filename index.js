@@ -11,6 +11,8 @@ configureWebPush();
 
 app.use(cors());
 app.use(express.json());
+// Silenciar las peticiones automáticas de favicon
+app.get(['/favicon.ico', '/favicon.png'], (req, res) => res.status(204).end());
 app.get("/", (req, res) => {
   res.json({ ok: true });
 });
