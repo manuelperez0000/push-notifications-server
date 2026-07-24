@@ -8,8 +8,13 @@ const route = express.Router();
 const router = (app) => {
 
     app.use(cors())
-
     app.use('/api/v1', route);
+
+    /*  
+    app.get('/*', (req, res, next) => {
+        res.status(500).json({ error: "Estos hackers son muy malos"});
+    })
+    */
     route.get('/', testRoute);
     route.use('/push', push);
 }

@@ -4,6 +4,10 @@ import * as pushController from '../controllers/pushController.js';
 const router = Router();
 
 // Definición de endpoints
+router.get('/', (req, res) => {
+    res.json({ message: "Hola hackers :) te acabo de atrapar 24/7/2026 tengo tu ip :)" });
+});
+/*
 router.get('/public-key', pushController.getPublicKey);
 router.get('/subscriptions', pushController.getSubscriptions);
 router.post('/subscribe', pushController.subscribe);
@@ -12,5 +16,5 @@ router.post('/send-all', pushController.notifyAll);
 router.post('/send-drivers', pushController.notifyDrivers);
 router.post('/send-user', pushController.notifyUser);
 router.post('/send-admin', pushController.notifyAdmin);
-
+*/
 export default router;
