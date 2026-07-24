@@ -11,10 +11,17 @@ router.get('/', (req, res) => {
 */
 router.get('/public-key', pushController.getPublicKey);
 router.get('/subscriptions', pushController.getSubscriptions);
+
+
 router.post('/subscribe', pushController.subscribe);
 router.post('/send-all', pushController.notifyAll);
 
 router.post('/send-drivers', pushController.notifyDrivers);
 router.post('/send-user', pushController.notifyUser);
 router.post('/send-admin', pushController.notifyAdmin);
+
+router.get('{*path}', (req, res) => res.status(404).json({ error: "Endpoint no encontrado" }));
+router.post('{*path}', (req, res) => res.status(404).json({ error: "Endpoint no encontrado" }));
+
+
 export default router;

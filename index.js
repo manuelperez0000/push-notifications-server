@@ -17,7 +17,7 @@ const whitelist = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || whitelist.includes(origin)) {
+    if (origin && whitelist.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Bloqueado por la política de CORS: Origen no autorizado.'));
