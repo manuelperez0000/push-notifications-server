@@ -12,12 +12,13 @@ configureWebPush();
 const whitelist = [
   'https://girorides.com',
   'https://www.girorides.com',
-  'https://girove.vercel.app/'
+  'https://girove.vercel.app/',
+  'http://localhost:3000'
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (origin && whitelist.includes(origin)) {
+    if (!origin || whitelist.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Bloqueado por la política de CORS: Origen no autorizado.'));
