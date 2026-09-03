@@ -12,8 +12,10 @@ configureWebPush();
 const whitelist = [
   'https://girorides.com',
   'https://www.girorides.com',
-  'https://girove.vercel.app/',
-  'http://localhost:3000'
+  'https://girove.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  ...(process.env.FRONTEND_URL || '').split(',').map((origin) => origin.trim()).filter(Boolean)
 ];
 
 const corsOptions = {
@@ -25,7 +27,7 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: false
 };
 
 // 3. Aplica el middleware globalmente
