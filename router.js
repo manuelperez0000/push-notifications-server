@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import push from './routes/push.js';
+import imagekit from './routes/imagekit.js';
 
 const testRoute = (req, res) => res.json({ message: "API de Giro Rides" });
 
@@ -15,6 +16,7 @@ const router = (app) => {
         res.status(500).json({ error: "Estos hackers son muy malos"});
     })
     */
+    route.get('/imagekit',imagekit)
     route.get('/', testRoute);
     route.use('/push', push);
 }
